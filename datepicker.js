@@ -219,7 +219,7 @@ class DatePicker extends Component {
   onTimePicked({action, hour, minute}) {
     if (action !== DatePickerAndroid.dismissedAction) {
       this.setState({
-        date: this.createMoment().hour(hour).minute(minute).toDate()
+        date: this.createMoment(this.state.date).hour(hour).minute(minute).toDate()
       });
       this.datePicked();
     } else {
