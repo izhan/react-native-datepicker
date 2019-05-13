@@ -56,6 +56,14 @@ class DatePicker extends Component {
     }
   }
 
+  createMoment(date, format) {
+    const {timeZoneOffsetInMinutes} = this.props;
+    if (timeZoneOffsetInMinutes === 0) {
+      return Moment.utc(date, format);
+    }
+    return Moment(date, format);
+  }
+
   setModalVisible(visible) {
     const {height, duration} = this.props;
 
@@ -144,7 +152,7 @@ class DatePicker extends Component {
       return date;
     }
 
-    return Moment(date, format).toDate();
+    return this.createMoment(date, format).toDate();
   }
 
   getDateStr(date = this.props.date) {
@@ -158,7 +166,7 @@ class DatePicker extends Component {
       return this.props.getDateStr(dateInstance);
     }
 
-    return Moment(dateInstance).format(format);
+    return this.createMoment(dateInstance).format(format);
   }
 
   datePicked() {
@@ -211,7 +219,7 @@ class DatePicker extends Component {
   onTimePicked({action, hour, minute}) {
     if (action !== DatePickerAndroid.dismissedAction) {
       this.setState({
-        date: Moment().hour(hour).minute(minute).toDate()
+        date: this.createMoment().hour(hour).minute(minute).toDate()
       });
       this.datePicked();
     } else {
@@ -223,7 +231,7 @@ class DatePicker extends Component {
     const {mode, androidMode, format = FORMATS[mode], is24Hour = !format.match(/h|a/)} = this.props;
 
     if (action !== DatePickerAndroid.dismissedAction) {
-      let timeMoment = Moment(this.state.date);
+      let timeMoment = this.createMoment(this.state.date);
 
       TimePickerAndroid.open({
         hour: timeMoment.hour(),
@@ -276,7 +284,7 @@ class DatePicker extends Component {
       } else if (mode === 'time') {
         // 选时间
 
-        let timeMoment = Moment(this.state.date);
+        let timeMoment = this.createMoment(this.state.date);
 
         TimePickerAndroid.open({
           hour: timeMoment.hour(),
